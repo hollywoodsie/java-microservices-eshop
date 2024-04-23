@@ -31,7 +31,7 @@ dependencies {
 	annotationProcessor ("org.projectlombok:lombok:1.18.32")
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("jakarta.validation:jakarta.validation-api:3.0.0")
-	implementation("org.hibernate.validator:hibernate-validator:7.0.2.Final")
+
 
 }
 
