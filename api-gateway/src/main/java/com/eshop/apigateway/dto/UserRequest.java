@@ -1,6 +1,5 @@
-package com.eshop.userservice.dto;
+package com.eshop.apigateway.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 

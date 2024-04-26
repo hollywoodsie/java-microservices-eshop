@@ -9,6 +9,7 @@ import com.eshop.productservice.model.Product;
 import com.eshop.productservice.repository.ProductRepository;
 
 import jakarta.validation.Valid;
+import com.eshop.productservice.exception.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +46,13 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse getOneProduct(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-        Product product = optionalProduct.orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
+        Product product = optionalProduct.orElseThrow(() -> new NotFoundException("Product with ID " + productId + " not found"));
         return convertToProductResponse(product);
     }
 
     public void updateProduct(Long productId, @Valid ProductRequest productRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " not found"));
 
         product.setName(productRequest.getName());
         product.setDescription(productRequest.getDescription());
@@ -64,7 +65,7 @@ public class ProductService {
             productRepository.deleteById(productId);
             log.info("Product {} is deleted", productId);
         } else {
-            throw new IllegalArgumentException("Product with ID " + productId + " not found");
+            throw new NotFoundException("Product with ID " + productId + " not found");
         }
     }
 

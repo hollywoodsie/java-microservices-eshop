@@ -22,21 +22,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 10)
+    @NotBlank(message = "Username field can not be empty")
+    @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
 
-    @Email
+    @Email(message = "Email should be valid")
     private String email;
 
-    @JsonIgnore
-    @NotBlank
+
+    @NotBlank(message = "Password field can not be empty")
     @Size(max = 100)
     private String password;
 
-    @JsonIgnore
+
     @NotBlank
-    @Size(max = 100)
-    private String role;
+    private String roles;
 
 }

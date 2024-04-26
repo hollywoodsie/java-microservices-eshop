@@ -2,6 +2,7 @@ package com.eshop.userservice.controller;
 
 import com.eshop.userservice.dto.UserRequest;
 import com.eshop.userservice.dto.UserResponse;
+import com.eshop.userservice.model.User;
 import com.eshop.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,10 +37,10 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
-        userService.updateUser(id, userRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/name/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
