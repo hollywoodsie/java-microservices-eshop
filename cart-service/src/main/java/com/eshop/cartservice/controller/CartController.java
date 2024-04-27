@@ -18,9 +18,10 @@ public class CartController {
 
     private final CartService cartService;
 
+
     @PostMapping("/add/{productId}")
-    public ResponseEntity<CartItemResponse> addItemToCart(@Valid @PathVariable Long productId) {
-        CartItemResponse cartItemResponse = cartService.addItemToCart(productId);
+    public ResponseEntity<CartItemResponse> addItemToCart(@RequestHeader("Authorization") String authorizationHeader, @Valid @PathVariable Long productId) {
+        CartItemResponse cartItemResponse = cartService.addItemToCart(productId, authorizationHeader);
         return new ResponseEntity<>(cartItemResponse, HttpStatus.CREATED);
     }
 

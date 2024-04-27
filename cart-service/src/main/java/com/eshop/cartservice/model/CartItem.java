@@ -32,7 +32,7 @@ public class CartItem {
     private Long productId;
 
     @NotNull
-    private Long userId;
+    private String owner;
 
     @NotBlank
     @Size(max = 10)
