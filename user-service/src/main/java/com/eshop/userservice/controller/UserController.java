@@ -1,5 +1,7 @@
 package com.eshop.userservice.controller;
 
+import com.eshop.userservice.dto.AuthRequest;
+import com.eshop.userservice.dto.AuthResponse;
 import com.eshop.userservice.dto.UserRequest;
 import com.eshop.userservice.dto.UserResponse;
 import com.eshop.userservice.model.User;
@@ -19,10 +21,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest userRequest) {
-        userService.createUser(userRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody UserRequest userRequest) {
+           AuthResponse response = userService.createUser(userRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest userRequest) {
+        AuthResponse response = userService.loginUser(userRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping

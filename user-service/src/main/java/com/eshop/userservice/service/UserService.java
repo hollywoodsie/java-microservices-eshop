@@ -1,15 +1,15 @@
 package com.eshop.userservice.service;
-
+import com.eshop.userservice.dto.AuthRequest;
+import com.eshop.userservice.dto.AuthResponse;
 import com.eshop.userservice.dto.UserRequest;
 import com.eshop.userservice.dto.UserResponse;
 import com.eshop.userservice.model.User;
 import com.eshop.userservice.repository.UserRepository;
 import com.eshop.userservice.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.mindrot.jbcrypt.BCrypt;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-
-    public void createUser(UserRequest userRequest) {
+    public AuthResponse createUser(UserRequest userRequest) {
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             throw new IllegalArgumentException("Email '" + userRequest.getEmail() + "' is already in use");
@@ -35,10 +35,29 @@ public class UserService {
         User user = User.builder()
                 .username(userRequest.getUsername())
                 .email(userRequest.getEmail())
-                .password(DigestUtils.sha256Hex(userRequest.getPassword()))
+                .password(BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt()))
                 .roles(userRequest.getRoles())
                 .build();
         userRepository.save(user);
+
+        String accessToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "ACCESS");
+        String refreshToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "REFRESH");
+
+        return new AuthResponse(accessToken,refreshToken);
+    }
+
+    public AuthResponse loginUser(AuthRequest authData) {
+        User user = userRepository.findByUsername(authData.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found with username: " + authData.getUsername()));
+
+        if (!BCrypt.checkpw(authData.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        String accessToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "ACCESS");
+        String refreshToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "REFRESH");
+
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     public List<UserResponse> getAllUsers() {
