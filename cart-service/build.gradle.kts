@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.5"
+    id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
@@ -16,9 +16,10 @@ repositories {
 }
 
 dependencies {
-    //implementation("org.springframework.boot:spring-boot-starter-amqp")
-   // implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    //implementation("io.lettuce:lettuce-core")
+
+    implementation("io.jsonwebtoken:jjwt-api:0.11.1")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.1")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.1")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
@@ -28,7 +29,6 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     runtimeOnly("org.postgresql:postgresql")
-    //developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     compileOnly ("org.projectlombok:lombok:1.18.32")
 
     annotationProcessor ("org.projectlombok:lombok:1.18.32")
@@ -38,7 +38,7 @@ dependencies {
 }
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.5")
     }
 }
 tasks.withType<Test> {
