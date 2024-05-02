@@ -19,7 +19,7 @@ public class CartItemResponse {
 
     private String description;
 
-    private String owner;
+    private Long ownerId;
 
     private Long productId;
 
