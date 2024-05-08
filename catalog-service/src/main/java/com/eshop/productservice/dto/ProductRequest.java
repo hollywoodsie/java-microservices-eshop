@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class ProductRequest {
 
     @NotBlank
-    @Size(max = 10)
+    @Size(max = 20)
     private String name;
 
     @NotBlank

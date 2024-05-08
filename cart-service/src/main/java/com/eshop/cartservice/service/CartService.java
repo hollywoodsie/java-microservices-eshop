@@ -31,7 +31,7 @@ public class CartService {
 
         String productUrl = "http://CATALOG-SERVICE/products/" + productId;
         CartItemResponse productResponse = restTemplate.getForObject(productUrl, CartItemResponse.class);
-        System.out.println(userId);
+
         CartItem cartItem = CartItem.builder()
                 .productId(productId)
                 .name(productResponse.getName())
@@ -63,6 +63,11 @@ public class CartService {
         } else {
             throw new NotFoundException("Cart item not found with ID: " + itemId);
         }
+    }
+
+    public void deleteItemForAllUsers(Long productId) {
+        List<CartItem> cartItems = cartRepository.findByProductId(productId);
+        cartRepository.deleteAll(cartItems);
     }
 
     public void deleteAllItemsForUser(Long userId) {

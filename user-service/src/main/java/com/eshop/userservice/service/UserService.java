@@ -3,6 +3,8 @@ import com.eshop.userservice.dto.AuthRequest;
 import com.eshop.userservice.dto.AuthResponse;
 import com.eshop.userservice.dto.UserRequest;
 import com.eshop.userservice.dto.UserResponse;
+import com.eshop.userservice.messaging.RabbitMQPublisher;
+import com.eshop.userservice.messaging.UserDeletedEvent;
 import com.eshop.userservice.model.User;
 import com.eshop.userservice.repository.UserRepository;
 import com.eshop.userservice.exception.NotFoundException;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RabbitMQPublisher rabbitMQPublisher;
     private final JwtUtil jwtUtil;
 
     public AuthResponse createUser(UserRequest userRequest) {
@@ -48,10 +51,10 @@ public class UserService {
 
     public AuthResponse loginUser(AuthRequest authData) {
         User user = userRepository.findByUsername(authData.getUsername())
-                .orElseThrow(() -> new NotFoundException("User not found with username: " + authData.getUsername()));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         if (!BCrypt.checkpw(authData.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid password");
+            throw new IllegalArgumentException("Invalid credentials");
         }
 
         String accessToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "ACCESS");
@@ -73,17 +76,20 @@ public class UserService {
         return convertToDto(user);
     }
 
-    public User getUserByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            throw new NotFoundException("User not found with username: " + username);
-        }
+    public UserResponse getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + username));
+        return convertToDto(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(userId);
+            rabbitMQPublisher.publishUserDeletedMessage(new UserDeletedEvent(userId));
+        } else {
+            throw new NotFoundException("User with ID " + userId + " not found");
+        }
     }
 
     private UserResponse convertToDto(User user) {

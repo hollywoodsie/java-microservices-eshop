@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest userRequest) {
-        AuthResponse response = userService.loginUser(userRequest);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+        AuthResponse response = userService.loginUser(authRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -46,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping("/name/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        UserResponse user = userService.getUserByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

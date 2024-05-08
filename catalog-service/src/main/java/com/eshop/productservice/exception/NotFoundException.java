@@ -1,3 +1,4 @@
+
 package com.eshop.productservice.exception;
 
 public class NotFoundException extends RuntimeException {
