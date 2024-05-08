@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.1.4"
 	id("io.spring.dependency-management") version "1.1.4"
+	id("org.flywaydb.flyway") version "9.16.3"
 }
 
 group = "com.eshop"
@@ -22,6 +23,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
 	implementation("org.hibernate.orm:hibernate-core")
+	implementation ("org.flywaydb:flyway-core:9.16.3")
 	implementation("jakarta.transaction:jakarta.transaction-api")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	//developmentOnly("org.springframework.boot:spring-boot-docker-compose")
