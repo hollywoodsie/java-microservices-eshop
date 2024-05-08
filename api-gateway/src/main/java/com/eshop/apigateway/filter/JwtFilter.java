@@ -1,9 +1,6 @@
 package com.eshop.apigateway.filter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,29 +64,26 @@ public class JwtFilter implements WebFilter {
         return chain.filter(exchange);
     }
 
-    private UsernamePasswordAuthenticationToken validateToken(String jwtToken) {
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
+    public UsernamePasswordAuthenticationToken validateToken(String jwtToken) throws JwtException {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
 
-            Date expiration = claims.getBody().get("exp", Date.class);
+        Date expiration = claims.getBody().get("exp", Date.class);
 
-            if (expiration != null && expiration.before(new Date())) {
-                throw new RuntimeException("Token is expired");
-            }
-
-            String userId = claims.getBody().get("id", String.class);
-            String role = claims.getBody().get("role", String.class);
-
-            if (userId != null && role != null) {
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-
-                return new UsernamePasswordAuthenticationToken(userId, null, authorities);
-            }
-        } catch (Exception e) {
-            System.out.println(e); //throw exceptions
+        if (expiration != null && expiration.before(new Date())) {
+            throw new JwtException("Token is expired");
         }
-        return null;
+
+        String userId = claims.getBody().get("id", String.class);
+        String role = claims.getBody().get("role", String.class);
+
+        if (userId != null && role != null) {
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+
+            return new UsernamePasswordAuthenticationToken(userId, null, authorities);
+        }
+
+        throw new JwtException("Token is not valid");
     }
 
     private String extractUserIdFrom(String jwtToken) {

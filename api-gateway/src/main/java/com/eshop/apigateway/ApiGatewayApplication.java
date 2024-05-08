@@ -1,21 +1,15 @@
 package com.eshop.apigateway;
-
-
+import com.eshop.apigateway.exception.GlobalWebExceptionHandler;
 import com.eshop.apigateway.filter.JwtFilter;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.reactive.function.client.WebClient;
+
 
 
 
@@ -29,6 +23,11 @@ public class ApiGatewayApplication {
 
 
     private JwtFilter jwtFilter;
+
+    @Bean
+    public GlobalWebExceptionHandler jwtWebExceptionHandler() {
+        return new GlobalWebExceptionHandler();
+    }
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, JwtFilter jwtFilter) {
