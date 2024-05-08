@@ -1,4 +1,5 @@
 package com.eshop.productservice.controller;
+import com.eshop.productservice.dto.ProductListResponse;
 import jakarta.validation.Valid;
 import com.eshop.productservice.dto.ProductRequest;
 import com.eshop.productservice.dto.ProductResponse;
@@ -23,14 +24,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        productService.createProduct(productRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse createdProduct = productService.createProduct(productRequest);
+        return new ResponseEntity<>(createdProduct,HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+    public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "5") Integer size) {
+        ProductListResponse products = productService.getAllProducts(page,size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

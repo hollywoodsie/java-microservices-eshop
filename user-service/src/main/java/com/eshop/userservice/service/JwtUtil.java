@@ -1,12 +1,9 @@
 package com.eshop.userservice.service;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
@@ -29,14 +26,6 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public Claims getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token).getBody();
-    }
-
-    public Date getExpirationDate(String token) {
-        return getClaims(token).getExpiration();
-    }
-
     public String generate(String id, String role, String tokenType) {
         Map<String, String> claims = Map.of("id", id, "role", role);
         long expMillis = "ACCESS".equalsIgnoreCase(tokenType)
@@ -53,9 +42,5 @@ public class JwtUtil {
                 .setExpiration(exp)
                 .signWith(key)
                 .compact();
-    }
-
-    private boolean isExpired(String token) {
-        return getExpirationDate(token).before(new Date());
     }
 }

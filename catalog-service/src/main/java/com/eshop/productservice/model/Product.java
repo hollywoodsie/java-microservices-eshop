@@ -28,11 +28,11 @@ public class Product {
     private Long id;
 
     @NotBlank
-    @Size(min =3, max = 10)
+    @Size(max = 20)
     private String name;
 
     @NotBlank
-    @Size(min = 10, max = 500)
+    @Size(max = 500)
     private String description;
 
     @NotNull

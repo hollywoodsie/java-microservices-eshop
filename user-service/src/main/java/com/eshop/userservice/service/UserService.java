@@ -44,9 +44,9 @@ public class UserService {
         userRepository.save(user);
 
         String accessToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "ACCESS");
-        String refreshToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "REFRESH");
 
-        return new AuthResponse(accessToken,refreshToken);
+
+        return new AuthResponse(accessToken);
     }
 
     public AuthResponse loginUser(AuthRequest authData) {
@@ -58,9 +58,8 @@ public class UserService {
         }
 
         String accessToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "ACCESS");
-        String refreshToken = jwtUtil.generate(String.valueOf(user.getId()), user.getRoles(), "REFRESH");
 
-        return new AuthResponse(accessToken, refreshToken);
+        return new AuthResponse(accessToken);
     }
 
     public List<UserResponse> getAllUsers() {
@@ -94,9 +93,7 @@ public class UserService {
 
     private UserResponse convertToDto(User user) {
         return UserResponse.builder()
-                .id(user.getId())
                 .username(user.getUsername())
-                .email(user.getEmail())
                 .role(user.getRoles())
                 .build();
     }

@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Data
-@Builder
 public class UserRequest {
 
     @NotBlank(message = "Username field can not be empty")

@@ -2,7 +2,9 @@ package com.eshop.productservice.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.eshop.productservice.dto.ProductListResponse;
 import com.eshop.productservice.dto.ProductRequest;
 import com.eshop.productservice.dto.ProductResponse;
 import com.eshop.productservice.messaging.ProductDeletedEvent;
@@ -11,6 +13,9 @@ import com.eshop.productservice.repository.ProductRepository;
 import com.eshop.productservice.messaging.RabbitMQPublisher;
 import jakarta.validation.Valid;
 import com.eshop.productservice.exception.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final RabbitMQPublisher rabbitMQPublisher;
 
-    public void createProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
@@ -32,13 +37,23 @@ public class ProductService {
                 .build();
 
         productRepository.save(product);
+        return convertToProductResponse(product);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public ProductListResponse getAllProducts(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll(pageable);
 
-        return products.stream().map(this::convertToProductResponse).toList();
+        List<ProductResponse> productDTOs = products.stream()
+                .map(this::convertToProductResponse)
+                .toList();
+
+        Integer totalPages = products.getTotalPages();
+        Integer currentPage = products.getNumber();
+        Integer totalItems = (int)products.getTotalElements();
+
+        return ProductListResponse.builder().products(productDTOs).totalItems(totalItems).currentPage(currentPage).totalPages(totalPages).build();
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +85,6 @@ public class ProductService {
 
     private ProductResponse convertToProductResponse(Product product) {
         return ProductResponse.builder()
-                .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())

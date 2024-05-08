@@ -1,14 +1,19 @@
 package com.eshop.cartservice.service;
 
 import com.eshop.cartservice.dto.CartItemResponse;
+import com.eshop.cartservice.dto.CartResponse;
 import com.eshop.cartservice.exception.NotFoundException;
 import com.eshop.cartservice.model.CartItem;
 import com.eshop.cartservice.repository.CartRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,14 +46,25 @@ public class CartService {
                 .build();
 
         cartRepository.save(cartItem);
-        return convertToDto(cartItem);
+        return convertToCartItemResponse(cartItem);
     }
 
-    public List<CartItemResponse> getAllItemsInCart(Long userId) {
-        List<CartItem> cartItems = cartRepository.findByOwnerId(userId);
-        return cartItems.stream()
-                .map(this::convertToDto)
+    public CartResponse getCartForUser(Long userId, Integer page, Integer size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<CartItem> cartItemsPage = cartRepository.findPaginatedByOwnerId(userId, pageable);
+
+        List<CartItemResponse> cartItemDTOs = cartItemsPage.stream()
+                .map(this::convertToCartItemResponse)
                 .collect(Collectors.toList());
+
+        BigDecimal totalPrice = calculateTotalPriceForUser(userId);
+        Integer totalPages = cartItemsPage.getTotalPages();
+        Integer currentPage = cartItemsPage.getNumber();
+        Integer totalItems = (int)cartItemsPage.getTotalElements();
+
+        return new CartResponse(cartItemDTOs, currentPage, totalPages, totalItems, totalPrice);
     }
 
     public void deleteItem(Long itemId, Long userId) {
@@ -75,14 +91,23 @@ public class CartService {
         cartRepository.deleteAll(cartItems);
     }
 
-    private CartItemResponse convertToDto(CartItem cartItem) {
+    public BigDecimal calculateTotalPriceForUser(Long userId) {
+
+        List<CartItem> cartItems = cartRepository.findByOwnerId(userId);
+
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (CartItem cartItem : cartItems) {
+            totalPrice = totalPrice.add(cartItem.getPrice());
+        }
+
+        return totalPrice;
+    }
+
+    private CartItemResponse convertToCartItemResponse(CartItem cartItem) {
         return CartItemResponse.builder()
-                .id(cartItem.getId())
                 .name((cartItem.getName()))
-                .ownerId(cartItem.getOwnerId())
                 .description(cartItem.getDescription())
                 .price(cartItem.getPrice())
-                .productId(cartItem.getProductId())
                 .build();
     }
 }

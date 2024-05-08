@@ -13,15 +13,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CartItemResponse {
 
-    private Long id;
-
     private String name;
 
     private String description;
-
-    private Long ownerId;
-
-    private Long productId;
 
     private BigDecimal price;
 }

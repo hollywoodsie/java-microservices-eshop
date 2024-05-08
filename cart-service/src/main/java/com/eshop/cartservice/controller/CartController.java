@@ -1,7 +1,8 @@
 package com.eshop.cartservice.controller;
 
-import com.eshop.cartservice.dto.CartItemRequest;
+
 import com.eshop.cartservice.dto.CartItemResponse;
+import com.eshop.cartservice.dto.CartResponse;
 import com.eshop.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,9 @@ public class CartController {
         return new ResponseEntity<>(cartItemResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<List<CartItemResponse>> getAllItemsInCart(@RequestHeader("X-UserId") Long owner) {
-        List<CartItemResponse> cartItems = cartService.getAllItemsInCart(owner);
+    @GetMapping
+    public ResponseEntity<CartResponse> getAllItemsInCart(@RequestHeader("X-UserId") Long owner, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "5") Integer size) {
+        CartResponse cartItems = cartService.getCartForUser(owner, page, size);
         return new ResponseEntity<>(cartItems, HttpStatus.OK);
     }
 
