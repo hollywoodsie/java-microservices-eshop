@@ -1,6 +1,7 @@
 package com.eshop.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
 public class UserRequest {
 
     @NotBlank(message = "Username field can not be empty")

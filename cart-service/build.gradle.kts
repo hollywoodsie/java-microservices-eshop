@@ -37,6 +37,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
+    testImplementation ("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation ("org.mockito:mockito-core:4.11.0")
 }
 dependencyManagement {
     imports {

@@ -1,5 +1,6 @@
 package com.eshop.userservice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Size;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class AuthRequest {
 
     @NotBlank(message = "Username field can not be empty")
