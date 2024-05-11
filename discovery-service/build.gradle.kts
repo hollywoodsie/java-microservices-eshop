@@ -22,12 +22,12 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.5")
     }
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

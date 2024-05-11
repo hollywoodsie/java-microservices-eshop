@@ -1,0 +1,103 @@
+version: '3.7'
+services:
+  discovery-service:
+    image: discovery-service-image:1.0
+    ports:
+      - "8084:8084"
+
+  user-service:
+    image: user-service-image:1.0
+    ports:
+      - "8082:8082"
+    depends_on:
+      - discovery-service
+      - user-database
+      - rabbitmq
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/user_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: "5672"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8084/eureka
+
+  user-database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: user_database
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+    ports:
+      - "3020:5432"
+
+  product-service:
+    image: product-service-image:1.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-service
+      - product-database
+      - rabbitmq
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/product_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: "5672"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8084/eureka
+
+  product-database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: product_database
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+    ports:
+      - "3021:5432"
+
+  cart-service:
+    image: cart-service-image:1.0
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-service
+      - cart-database
+      - rabbitmq
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/cart_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: "5672"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8084/eureka
+
+  cart-database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: cart_database
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+    ports:
+      - "3022:5432"
+
+  api-gateway:
+    image: api-gateway-image:1.0
+    ports:
+      - "8085:8085"
+    depends_on:
+      - discovery-service
+      - cart-database
+      - product-service
+      - user-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8084/eureka
+
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Optional: management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
