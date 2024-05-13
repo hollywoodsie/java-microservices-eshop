@@ -32,7 +32,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("jakarta.validation:jakarta.validation-api:3.0.0")
-
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation ("org.junit.jupiter:junit-jupiter:5.7.1")
 	testImplementation ("org.mockito:mockito-core:4.11.0")

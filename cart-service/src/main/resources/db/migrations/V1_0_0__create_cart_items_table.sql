@@ -4,5 +4,6 @@ CREATE TABLE cart_items (
                          owner_id BIGINT NOT NULL,
                          name VARCHAR(10) NOT NULL,
                          description VARCHAR(500) NOT NULL,
-                         price NUMERIC(19, 2) NOT NULL
+                         price NUMERIC(19, 2) NOT NULL,
+                         quantity INT NOT NULL
 );

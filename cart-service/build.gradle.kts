@@ -32,6 +32,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     runtimeOnly("org.postgresql:postgresql")
     compileOnly ("org.projectlombok:lombok:1.18.32")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     annotationProcessor ("org.projectlombok:lombok:1.18.32")
 

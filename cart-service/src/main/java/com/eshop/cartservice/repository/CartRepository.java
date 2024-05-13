@@ -11,4 +11,7 @@ public interface CartRepository extends CrudRepository<CartItem, Long> {
     List<CartItem> findByOwnerId(Long userId);
     Page<CartItem> findPaginatedByOwnerId(Long ownerId, Pageable pageable);
     List<CartItem> findByProductId(Long productId);
+    CartItem findByOwnerIdAndProductId(Long userId, Long productId);
+
+    CartItem findByProductIdAndOwnerId(Long productId, Long userId);
 }

@@ -18,4 +18,6 @@ public class CartItemResponse {
     private String description;
 
     private BigDecimal price;
+
+    private Integer quantity;
 }

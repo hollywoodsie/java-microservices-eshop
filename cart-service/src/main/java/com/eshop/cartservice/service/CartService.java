@@ -32,21 +32,33 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public CartItemResponse addItemToCart(Long productId, Long userId) {
+    public CartItemResponse addItemToCart(Long productId, Long userId, Integer quantity) {
 
-        String productUrl = "http://CATALOG-SERVICE/products/" + productId;
-        CartItemResponse productResponse = restTemplate.getForObject(productUrl, CartItemResponse.class);
 
-        CartItem cartItem = CartItem.builder()
-                .productId(productId)
-                .name(productResponse.getName())
-                .ownerId(userId)
-                .description(productResponse.getDescription())
-                .price(productResponse.getPrice())
-                .build();
+        CartItem existingCartItem = cartRepository.findByProductIdAndOwnerId(productId, userId);
 
-        cartRepository.save(cartItem);
-        return convertToCartItemResponse(cartItem);
+        if (existingCartItem != null) {
+
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+            cartRepository.save(existingCartItem);
+            return convertToCartItemResponse(existingCartItem);
+        } else {
+
+            String productUrl = "http://CATALOG-SERVICE/products/" + productId;
+            CartItemResponse productResponse = restTemplate.getForObject(productUrl, CartItemResponse.class);
+
+            CartItem cartItem = CartItem.builder()
+                    .productId(productId)
+                    .name(productResponse.getName())
+                    .ownerId(userId)
+                    .description(productResponse.getDescription())
+                    .price(productResponse.getPrice())
+                    .quantity(quantity)
+                    .build();
+
+            cartRepository.save(cartItem);
+            return convertToCartItemResponse(cartItem);
+        }
     }
 
     public CartResponse getCartForUser(Long userId, Integer page, Integer size) {
@@ -92,12 +104,12 @@ public class CartService {
     }
 
     public BigDecimal calculateTotalPriceForUser(Long userId) {
-
         List<CartItem> cartItems = cartRepository.findByOwnerId(userId);
 
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (CartItem cartItem : cartItems) {
-            totalPrice = totalPrice.add(cartItem.getPrice());
+            BigDecimal itemTotalPrice = cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+            totalPrice = totalPrice.add(itemTotalPrice);
         }
 
         return totalPrice;
@@ -108,6 +120,7 @@ public class CartService {
                 .name((cartItem.getName()))
                 .description(cartItem.getDescription())
                 .price(cartItem.getPrice())
+                .quantity(cartItem.getQuantity())
                 .build();
     }
 }

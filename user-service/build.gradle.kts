@@ -32,7 +32,9 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.1")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.1")
 	implementation("org.mindrot:jbcrypt:0.4")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 
 	//developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

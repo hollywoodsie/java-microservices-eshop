@@ -24,11 +24,14 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.1")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.1")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.2")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.0.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
     compileOnly ("org.projectlombok:lombok:1.18.32")
     annotationProcessor ("org.projectlombok:lombok:1.18.32")
+
 }
 
 dependencyManagement {

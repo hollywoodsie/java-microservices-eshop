@@ -44,4 +44,7 @@ public class CartItem {
 
     @NotNull
     private BigDecimal price;
+
+    @NotNull
+    private Integer quantity;
 }
