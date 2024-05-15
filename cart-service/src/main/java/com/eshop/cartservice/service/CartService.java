@@ -103,6 +103,9 @@ public class CartService {
         cartRepository.deleteAll(cartItems);
     }
 
+
+
+
     public BigDecimal calculateTotalPriceForUser(Long userId) {
         List<CartItem> cartItems = cartRepository.findByOwnerId(userId);
 

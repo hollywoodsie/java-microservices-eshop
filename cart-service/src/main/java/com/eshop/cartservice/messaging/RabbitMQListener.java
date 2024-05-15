@@ -25,5 +25,5 @@ public class RabbitMQListener {
     public void receiveUserDeletedMessage(UserDeletedEvent event) {
         cartService.deleteAllItemsForUser(event.getUserId());
     }
-
+    
 }

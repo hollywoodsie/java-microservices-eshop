@@ -10,10 +10,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 
 @SpringBootApplication
@@ -41,11 +38,11 @@ public class ApiGatewayApplication {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges ->
                         exchanges
-                                .pathMatchers("/v3/api-docs/all-services", "/v3/api-docs/swagger-config").permitAll()
+                                .pathMatchers("/v3/api-docs/swagger-config").permitAll()
                                 .pathMatchers("/documentation/**").permitAll()
-                                .pathMatchers("/cart-service/**").permitAll()
-                                .pathMatchers("/user-service/**").permitAll()
-                                .pathMatchers("/product-service/**").permitAll()
+                                .pathMatchers("/cart-docs/**").permitAll()
+                                .pathMatchers("/user-docs/**").permitAll()
+                                .pathMatchers("/product-docs/**").permitAll()
                                 .pathMatchers(HttpMethod.POST, "/eureka/**").permitAll()
                                 .pathMatchers(HttpMethod.GET, "/products/**").hasAnyRole("USER","ADMIN")
                                 .pathMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
@@ -64,6 +61,5 @@ public class ApiGatewayApplication {
                 .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
-
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
+
 public class CartController {
 
     private final CartService cartService;
@@ -32,9 +33,9 @@ public class CartController {
         return new ResponseEntity<>(cartItems, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<Void> deleteItemFromCart(@RequestHeader("X-UserId") Long owner, @Valid @PathVariable Long productId) {
-        cartService.deleteItem(productId,owner);
+    @DeleteMapping("/delete/{cartItemId}")
+    public ResponseEntity<Void> deleteItemFromCart(@RequestHeader("X-UserId") Long owner, @Valid @PathVariable Long cartItemId) {
+        cartService.deleteItem(cartItemId,owner);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
