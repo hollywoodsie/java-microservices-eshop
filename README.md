@@ -52,7 +52,22 @@
 
 ## Default Endpoints Security 
 
-![Endpoints](docs/endpoints.png)
+```java
+...
+
+  .pathMatchers(HttpMethod.POST, "/eureka/**").permitAll()
+  .pathMatchers(HttpMethod.GET, "/products/**").hasAnyRole("USER","ADMIN")
+  .pathMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+  .pathMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+  .pathMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+  .pathMatchers(HttpMethod.POST, "/users/**").permitAll()
+  .pathMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER","ADMIN")
+  .pathMatchers(HttpMethod.DELETE, "users/**").hasRole("ADMIN")
+  .pathMatchers(HttpMethod.GET, "/cart/**").hasAnyRole("USER","ADMIN")
+  .pathMatchers(HttpMethod.POST, "/cart/**").hasAnyRole("USER","ADMIN")
+
+...
+```
 
 ## Running the app with Docker
 
