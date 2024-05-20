@@ -1,17 +1,17 @@
 # Java Spring Boot Microservices E-Shop Project
-(Eureka Server, Spring Cloud API Gateway, Spring Security(JWT, Authentication, Authorization), RabbitMQ, PostgreSQL, Docker, etc.)
+\
+This project uses these technologies: Eureka Server, Spring Cloud API Gateway, Spring Security(JWT, Authentication, Authorization), RabbitMQ, PostgreSQL, Docker, etc.
 
-# About the project
+## About the project
+\
+Guest(No Auth) can register and login through user service by user role (ADMIN or USER) through api gateway
 
-<ul style="list-style-type:disc">
-  
-  <li>Guest(No Auth) can register and login through user service by user role (ADMIN or USER) through api gateway</li>
-  <li>Admin/User can send any request to relevant service through api gateway with its bearer token</li>
-  <li>Admin can delete user/product, then all data associated with this user/product will be deleted from cart(via RabbitMQ messaging)</li>
-</ul>
+Admin/User can send any request to relevant service through api gateway with its bearer token
 
-### Project Stack Dependencies
+Admin can delete user/product, then all data associated with this user/product will be deleted from cart(via RabbitMQ messaging)
 
+\
+Project Stack Dependencies:
 * Core
     * Spring
         * Spring Boot
@@ -42,6 +42,9 @@
   * Mockito
 
 ## Application default configuration
+\
+The table below shows a list of services:
+
 | Service               | Port |
 |-----------------------| --   |
 | api-gateway           | 8085 |
@@ -50,8 +53,10 @@
 | cart-service          | 8081 |
 | product-service       | 8080 |
 
-## Default Endpoints Security 
+### Default Endpoints Security 
 
+\
+The code below describes the rules for secure endpoints:
 ```java
 ...
 
@@ -69,8 +74,9 @@
 ...
 ```
 
-## Running the app with Docker
+### Running the app with Docker
 
+\
 Download/clone sources and run:
 ```bash
 docker compose up -d
