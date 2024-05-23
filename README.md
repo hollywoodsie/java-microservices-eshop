@@ -1,16 +1,16 @@
 # Java Spring Boot Microservices E-Shop Project
-\
+
 This project uses these technologies: Eureka Server, Spring Cloud API Gateway, Spring Security(JWT, Authentication, Authorization), RabbitMQ, PostgreSQL, Docker, etc.
 
 ## About the project
-\
+
 Guest(No Auth) can register and login through user service by user role (ADMIN or USER) through api gateway
 
 Admin/User can send any request to relevant service through api gateway with its bearer token
 
 Admin can delete user/product, then all data associated with this user/product will be deleted from cart(via RabbitMQ messaging)
 
-\
+
 Project Stack Dependencies:
 * Core
     * Spring
@@ -42,7 +42,7 @@ Project Stack Dependencies:
   * Mockito
 
 ## Application default configuration
-\
+
 The table below shows a list of services:
 
 | Service               | Port |
@@ -55,7 +55,6 @@ The table below shows a list of services:
 
 ### Default Endpoints Security 
 
-\
 The code below describes the rules for secure endpoints:
 ```java
 ...
@@ -76,7 +75,6 @@ The code below describes the rules for secure endpoints:
 
 ### Running the app with Docker
 
-\
 Download/clone sources and run:
 ```bash
 docker compose up -d
